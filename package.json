@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node ./GridServer/index.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vite"
+    "dev": "node ./LuksoMCP/index.mjs --launched-by=claude --includeNamespaces=gridartist --excludeNamespaces= --activateTags="
+
   },
   "keywords": [],
   "author": "",
