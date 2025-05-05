@@ -67,7 +67,7 @@ To use this repository with Claude, follow these steps:
 1. **Clone the repository:**
 
 ```bash
-   git clone https://github.com/YOUR_USERNAME/lukso-mcp-schemas.git
+   git clone https://github.com/a6b8/lukso-mcp-schemas.git
    cd lukso-mcp-schemas
 ````
 
