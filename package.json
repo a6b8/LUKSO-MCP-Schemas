@@ -4,10 +4,10 @@
   "description": "",
   "main": "./GridServer/index.js",
   "directories": {
-    "start": "node GridServer/index.js",
     "test": "tests"
   },
   "scripts": {
+    "start": "node ./GridServer/index.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite"
   },
