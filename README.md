@@ -28,7 +28,6 @@ Below is a list of currently available schemas and their exposed routes:
 | Namespace      | # Routes | Category            | Route Names (Excerpt)                                                     |
 | -------------- | -------- | ------------------- | ------------------------------------------------------------------------- |
 | `luksoNetwork` | 3        | Profiles            | `readProfileData`, `fetchProfileMetadata`, `getUniversalProfile`          |
-| `gridartist`   | 2        | Identity / Auth     | `requestAuth`, `updateProfileScript`                                      |
 | `luksoNetwork` | 12       | Addresses           | `listAddresses`, `getAddress`, `getAddressCounters`, ...                  |
 | `luksoNetwork` | 4        | Blocks              | `getBlocks`, `getBlockById`, `getBlockTransactions`, `getFinalized`       |
 | `luksoNetwork` | 2        | Explorer Meta       | `getLuksoExplorerSchema`, `fectchLuksoExplorer`                           |
