@@ -1,16 +1,13 @@
 {
-  "name": "0-create-grid-server",
+  "name": "luksomcp",
   "version": "1.0.0",
   "description": "",
-  "main": "./GridServer/index.js",
+  "main": "./lukso-mcp.mjs",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "start": "node ./GridServer/index.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node ./LuksoMCP/index.mjs --launched-by=claude --includeNamespaces=gridartist --excludeNamespaces= --activateTags="
-
+    "start": "node ./lukso-mcp.mjs"
   },
   "keywords": [],
   "author": "",

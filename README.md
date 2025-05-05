@@ -117,7 +117,7 @@ You can use the interactive [Schema Generator 1.2](https://chatgpt.com/g/g-68066
 Are you building something on the LUKSO Blockchain? Submit your schema and make your project AI-compatible!
 
 1. Fork this repository.
-2. Add your schema to `/schemas/<your_project>.mjs`.
+2. Add your schema to `/schemas/version/<your_project>.mjs`.
 3. Submit a pull request.
 
 ---
