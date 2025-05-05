@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>p5.js Viewer</title>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="status">Loading script...</div>
+
+  <script id="dynamic-script">
+// Delaunay Triangulation Animation
+// Basierend auf p5.js
+
+// Array für die Punkte
+let points = [];
+// Maximale Anzahl von Punkten
+const MAX_POINTS = 50; // Reduzierte Anzahl für bessere Performance
+// Minimaler Abstand zwischen den Punkten
+const MIN_DISTANCE = 40; // Erhöhter Abstand für bessere Sichtbarkeit
+// Geschwindigkeit der Punktbewegung
+const SPEED = 0.3; // Reduzierte Geschwindigkeit für stabilere Berechnung
+
+function setup() {
+  // Canvas erstellen, das die Größe des Browserfensters hat
+  createCanvas(windowWidth, windowHeight);
+  
+  // Initialisiere zufällige Punkte
+  for (let i = 0; i < MAX_POINTS; i++) {
+    let valid = false;
+    let newPoint;
+    
+    // Versuche, einen gültigen Punkt zu finden (mit ausreichend Abstand zu anderen Punkten)
+    let attempts = 0;
+    while (!valid && attempts < 100) {
+      attempts++;
+      valid = true;
+      newPoint = {
+        x: random(width),
+        y: random(height),
+        vx: random(-SPEED, SPEED),
+        vy: random(-SPEED, SPEED)
+      };
+      
+      // Überprüfe den Abstand zu allen vorhandenen Punkten
+      for (let j = 0; j < points.length; j++) {
+        let d = dist(newPoint.x, newPoint.y, points[j].x, points[j].y);
+        if (d < MIN_DISTANCE) {
+          valid = false;
+          break;
+        }
+      }
+    }
+    
+    if (valid) {
+      points.push(newPoint);
+    }
+  }
+}
+
+function draw() {
+  // Setze den Hintergrund
+  background(20);
+  
+  // Bewege alle Punkte
+  for (let i = 0; i < points.length; i++) {
+    points[i].x += points[i].vx;
+    points[i].y += points[i].vy;
+    
+    // Prüfe auf Kollision mit den Rändern
+    if (points[i].x < 0 || points[i].x > width) {
+      points[i].vx *= -1;
+      // Stelle sicher, dass der Punkt im Bildschirm bleibt
+      points[i].x = constrain(points[i].x, 0, width);
+    }
+    if (points[i].y < 0 || points[i].y > height) {
+      points[i].vy *= -1;
+      // Stelle sicher, dass der Punkt im Bildschirm bleibt
+      points[i].y = constrain(points[i].y, 0, height);
+    }
+  }
+  
+  try {
+    // Berechne die Delaunay-Triangulation
+    let triangles = calculateDelaunay(points);
+    
+    // Zeichne die Dreiecke
+    noFill();
+    stroke(0, 150, 255, 100);
+    strokeWeight(1);
+    
+    for (let i = 0; i < triangles.length; i++) {
+      let t = triangles[i];
+      
+      if (t && t.p1 && t.p2 && t.p3) {
+        // Zeichne das Dreieck
+        beginShape();
+        vertex(t.p1.x, t.p1.y);
+        vertex(t.p2.x, t.p2.y);
+        vertex(t.p3.x, t.p3.y);
+        endShape(CLOSE);
+      }
+    }
+    
+    // Zeige die Anzahl der Dreiecke an
+    fill(255);
+    textSize(16);
+    text(`Dreiecke: ${triangles.length}`, 20, 70);
+  } catch (e) {
+    // Bei Fehler in der Triangulation einen Hinweis anzeigen
+    fill(255, 0, 0);
+    textSize(16);
+    text("Triangulation-Fehler: " + e.message, 20, 70);
+  }
+  
+  // Zeichne die Punkte
+  fill(255);
+  noStroke();
+  
+  for (let i = 0; i < points.length; i++) {
+    ellipse(points[i].x, points[i].y, 4, 4);
+  }
+  
+  // Zeige die FPS und die Anzahl der Punkte an
+  fill(255);
+  textSize(16);
+  text(`FPS: ${floor(frameRate())}`, 20, 30);
+  text(`Punkte: ${points.length}`, 20, 50);
+}
+
+// Funktion zur Berechnung der Delaunay-Triangulation
+// Dies ist eine vereinfachte Version, die den Bowyer-Watson Algorithmus verwendet
+function calculateDelaunay(points) {
+  // Erstelle die Grenzdreiecke (ein großes Dreieck, das alle Punkte enthält)
+  let maxBound = max(width, height) * 3;
+  let superTriangle = {
+    p1: { x: -maxBound, y: -maxBound },
+    p2: { x: maxBound * 2, y: -maxBound },
+    p3: { x: -maxBound, y: maxBound * 2 }
+  };
+  
+  // Starte mit dem Super-Dreieck
+  let triangles = [superTriangle];
+  
+  // Füge jeden Punkt hinzu
+  for (let i = 0; i < points.length; i++) {
+    let point = points[i];
+    let edges = [];
+    
+    // Finde alle Dreiecke, die diesen Punkt enthalten würden
+    let trianglesToRemove = [];
+    
+    for (let j = 0; j < triangles.length; j++) {
+      let triangle = triangles[j];
+      
+      // Überprüfe, ob der Punkt innerhalb des Umkreises des Dreiecks liegt
+      if (isPointInCircumcircle(point, triangle)) {
+        // Speichere die Kanten des Dreiecks
+        edges.push({ p1: triangle.p1, p2: triangle.p2 });
+        edges.push({ p1: triangle.p2, p2: triangle.p3 });
+        edges.push({ p1: triangle.p3, p2: triangle.p1 });
+        
+        // Entferne dieses Dreieck
+        trianglesToRemove.push(j);
+      }
+    }
+    
+    // Entferne die markierten Dreiecke (in umgekehrter Reihenfolge, um Indexprobleme zu vermeiden)
+    trianglesToRemove.sort((a, b) => b - a);
+    for (let j = 0; j < trianglesToRemove.length; j++) {
+      triangles.splice(trianglesToRemove[j], 1);
+    }
+    
+    // Entferne doppelte Kanten
+    for (let j = 0; j < edges.length; j++) {
+      if (edges[j] === null) continue;
+      
+      for (let k = j + 1; k < edges.length; k++) {
+        if (edges[k] === null) continue;
+        
+        if (areEdgesEqual(edges[j], edges[k])) {
+          // Markiere beide Kanten als ungültig
+          edges[j] = null;
+          edges[k] = null;
+          break;
+        }
+      }
+    }
+    
+    // Erstelle neue Dreiecke mit den verbleibenden Kanten
+    for (let j = 0; j < edges.length; j++) {
+      if (edges[j] !== null) {
+        triangles.push({
+          p1: edges[j].p1,
+          p2: edges[j].p2,
+          p3: point
+        });
+      }
+    }
+  }
+  
+  // Entferne alle Dreiecke, die einen Punkt des Super-Dreiecks enthalten
+  let i = 0;
+  while (i < triangles.length) {
+    let t = triangles[i];
+    if (isPointPartOfSuperTriangle(t.p1, superTriangle) ||
+        isPointPartOfSuperTriangle(t.p2, superTriangle) ||
+        isPointPartOfSuperTriangle(t.p3, superTriangle)) {
+      triangles.splice(i, 1);
+    } else {
+      i++;
+    }
+  }
+  
+  return triangles;
+}
+
+// Hilfsfunktion: Überprüft, ob ein Punkt innerhalb des Umkreises eines Dreiecks liegt
+function isPointInCircumcircle(point, triangle) {
+  // Sicherheitscheck, ob alle benötigten Punkte vorhanden sind
+  if (!point || !triangle || !triangle.p1 || !triangle.p2 || !triangle.p3) {
+    return false;
+  }
+  
+  let { p1, p2, p3 } = triangle;
+  
+  // Berechnung der Umkreismitte und des Radius (robustere Methode)
+  let A = p1.x * (p2.y - p3.y) - p1.y * (p2.x - p3.x) + p2.x * p3.y - p3.x * p2.y;
+  let B = (p1.x * p1.x + p1.y * p1.y) * (p3.y - p2.y) + 
+          (p2.x * p2.x + p2.y * p2.y) * (p1.y - p3.y) + 
+          (p3.x * p3.x + p3.y * p3.y) * (p2.y - p1.y);
+  let C = (p1.x * p1.x + p1.y * p1.y) * (p2.x - p3.x) + 
+          (p2.x * p2.x + p2.y * p2.y) * (p3.x - p1.x) + 
+          (p3.x * p3.x + p3.y * p3.y) * (p1.x - p2.x);
+  
+  // Vermeidung der Division durch Null
+  if (Math.abs(A) < 0.00001) {
+    return false;
+  }
+  
+  let x = -B / (2 * A);
+  let y = -C / (2 * A);
+  let r_squared = ((x - p1.x) * (x - p1.x) + (y - p1.y) * (y - p1.y));
+  
+  // Überprüfe, ob der Punkt innerhalb des Umkreises liegt
+  let d_squared = ((point.x - x) * (point.x - x) + (point.y - y) * (point.y - y));
+  
+  return d_squared <= r_squared * 1.001; // Kleine Toleranz hinzufügen
+}
+
+// Hilfsfunktion: Überprüft, ob zwei Kanten gleich sind
+function areEdgesEqual(edge1, edge2) {
+  // Überprüfe zuerst, ob eine der Kanten null ist
+  if (edge1 === null || edge2 === null) {
+    return false;
+  }
+  
+  return (edge1.p1 === edge2.p1 && edge1.p2 === edge2.p2) ||
+         (edge1.p1 === edge2.p2 && edge1.p2 === edge2.p1);
+}
+
+// Hilfsfunktion: Überprüft, ob ein Punkt Teil des Super-Dreiecks ist
+function isPointPartOfSuperTriangle(point, superTriangle) {
+  return point === superTriangle.p1 || 
+         point === superTriangle.p2 || 
+         point === superTriangle.p3;
+}
+
+// Reagiere auf Größenänderung des Fensters
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+  </script>
+</body>
+</html>

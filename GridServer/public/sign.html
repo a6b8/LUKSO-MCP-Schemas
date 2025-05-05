@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Universal Profile Extension Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+  <h1>Universal Profile Extension Test</h1>
+  <p id="status">Status: Not Detected</p>
+  <button id="connect" disabled>Connect to UP Extension</button>
+  <button id="disconnect" style="display:none;">Disconnect</button>
+  <p id="address"></p>
+  <button id="sign" style="display:none;">Sign Message</button>
+  <p id="server-response"></p>
+  <p id="verified-address"></p>
+
+  <script>
+    let upProvider = null;
+    let connectedAccount = null;
+
+    const statusEl = document.getElementById('status');
+    const addressEl = document.getElementById('address');
+    const connectBtn = document.getElementById('connect');
+    const disconnectBtn = document.getElementById('disconnect');
+    const signBtn = document.getElementById('sign');
+    const serverResponseEl = document.getElementById('server-response');
+    const verifiedAddressEl = document.getElementById('verified-address');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const activationCode = urlParams.get('activationCode');
+    const addressFromUrl = urlParams.get('address');
+
+    function updateUIConnected(account) {
+      connectedAccount = account;
+      addressEl.textContent = 'Connected Address: ' + account;
+      statusEl.textContent = 'Status: Connected';
+      connectBtn.style.display = 'none';
+      disconnectBtn.style.display = 'inline-block';
+      signBtn.style.display = 'inline-block';
+    }
+
+    function updateUIDisconnected() {
+      connectedAccount = null;
+      addressEl.textContent = '';
+      statusEl.textContent = 'Status: Not Connected';
+      connectBtn.style.display = 'inline-block';
+      disconnectBtn.style.display = 'none';
+      signBtn.style.display = 'none';
+      serverResponseEl.textContent = '';
+      verifiedAddressEl.textContent = '';
+    }
+
+    window.addEventListener('eip6963:announceProvider', (event) => {
+      const providerInfo = event.detail;
+      if (providerInfo.info.name.includes('Universal') || providerInfo.info.name.includes('UP')) {
+        upProvider = providerInfo.provider;
+        statusEl.textContent = 'Status: UP Extension Detected (via EIP-6963)';
+        connectBtn.disabled = false;
+      }
+    });
+
+    window.addEventListener('load', () => {
+      if (window.lukso || (window.ethereum && window.ethereum.isUniversalProfile)) {
+        upProvider = window.lukso || window.ethereum;
+        statusEl.textContent = 'Status: UP Extension Detected (legacy)';
+        connectBtn.disabled = false;
+      }
+    });
+
+    let currentAddress = null;
+
+    connectBtn.addEventListener('click', async () => {
+      if (!upProvider) return alert('Provider not available');
+      try {
+        const accounts = await upProvider.request({ method: 'eth_requestAccounts' });
+        if (accounts.length === 0) return alert('No accounts found');
+        currentAddress = accounts[0];
+
+        updateUIConnected(currentAddress);
+      } catch (err) {
+        alert('Connection failed: ' + err.message);
+      }
+    });
+
+    disconnectBtn.addEventListener('click', () => {
+      updateUIDisconnected();
+    });
+
+    signBtn.addEventListener('click', async () => {
+      if (!upProvider || !connectedAccount) return alert('Not connected');
+      if (!activationCode ) return alert('Missing activationCode or address from URL');
+
+      try {
+        const _provider = new ethers.providers.Web3Provider( window.lukso )
+        await _provider.send('eth_requestAccounts', []);
+        const signer = _provider.getSigner();
+        const _message = `Request for Controller Address`;
+
+        const _signature = await signer.signMessage(_message);
+        const controllerAddress = ethers.utils.verifyMessage(_message, _signature);
+
+        const message = `Activation Code: ${activationCode}\nUniversal Profile: ${currentAddress}\nController Address: ${controllerAddress}`;
+        const signature = await upProvider.request({
+          method: 'personal_sign',
+          params: [ message, connectedAccount ],
+        } )
+
+        // Optional: Sende Signatur an Server
+        const url = `http://localhost:3000/api/auth-address`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ signature, controllerAddress, 'universalProfile': currentAddress, activationCode })
+        });
+
+        const data = await response.text();
+        serverResponseEl.textContent = 'Server Response: ' + data;
+
+      } catch (err) {
+        alert('Signing or sending failed: ' + err.message);
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "0x55f1faf4a69d73d4997252de9155e64b7e652e92": {
+    "apiKey": "gdTLIg_HuzW4XvwmEiCc9Q",
+    "universalProfile": "0x7b035f7cDBB0e44E52722dd2e89917232908e962",
+    "script": "<html><body>HELLO WORLD</body></html>"
+  },
+  "0x7b035f7cdbb0e44e52722dd2e89917232908e962": {
+    "apiKey": "mJI5IXnz2WRfy5FR1iWHyA",
+    "controllerAddress": "0x55F1fAf4A69D73d4997252DE9155E64b7e652E92",
+    "script": "<html><body>HELLO WORLD</body></html>"
+  }
+}
