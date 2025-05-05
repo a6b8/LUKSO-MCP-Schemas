@@ -25,23 +25,23 @@ Schemas in this repository allow API interaction through:
 
 Below is a list of currently available schemas and their exposed routes:
 
-| Namespace      | # Routes | Route Names (Excerpt)                                                     |
-| -------------- | -------- | ------------------------------------------------------------------------- |
-| `luksoNetwork` | 3        | `readProfileData`, `fetchProfileMetadata`, `getUniversalProfile`          |
-| `gridartist`   | 2        | `requestAuth`, `updateProfileScript`                                      |
-| `luksoNetwork` | 12       | `listAddresses`, `getAddress`, `getAddressCounters`, ...                  |
-| `luksoNetwork` | 4        | `getBlocks`, `getBlockById`, `getBlockTransactions`, `getFinalized`       |
-| `luksoNetwork` | 2        | `getLuksoExplorerSchema`, `fectchLuksoExplorer`                           |
-| `luksoNetwork` | 2        | `getMainPageTransactions`, `getMainPageBlocks`                            |
-| `luksoNetwork` | 7        | `getNFTsByAddress`, `getNFTCollectionsByAddress`, `getNFTById`, ...       |
-| `luksoNetwork` | 2        | `search`, `searchRedirect`                                                |
-| `luksoNetwork` | 4        | `listcontracts`, `getabi`, `getsourcecode`, `getcontractmetadata`         |
-| `luksoNetwork` | 3        | `getStats`, `getTransactionChart`, `getMarketChart`                       |
-| `luksoNetwork` | 5        | `listTokens`, `getTokenByAddress`, `getTokenTransfers`, ...               |
-| `luksoNetwork` | 7        | `getTransactions`, `getTransactionByHash`, `getTokenTransfersByHash`, ... |
-| `profilejump`  | 5        | `prices`, `hotProfiles`, `tokensList`, `profilesList`, `tokenDetails`     |
+| Namespace      | # Routes | Category            | Route Names (Excerpt)                                                     |
+| -------------- | -------- | ------------------- | ------------------------------------------------------------------------- |
+| `luksoNetwork` | 3        | Profiles            | `readProfileData`, `fetchProfileMetadata`, `getUniversalProfile`          |
+| `gridartist`   | 2        | Identity / Auth     | `requestAuth`, `updateProfileScript`                                      |
+| `luksoNetwork` | 12       | Addresses           | `listAddresses`, `getAddress`, `getAddressCounters`, ...                  |
+| `luksoNetwork` | 4        | Blocks              | `getBlocks`, `getBlockById`, `getBlockTransactions`, `getFinalized`       |
+| `luksoNetwork` | 2        | Explorer Meta       | `getLuksoExplorerSchema`, `fectchLuksoExplorer`                           |
+| `luksoNetwork` | 2        | Explorer Homepage   | `getMainPageTransactions`, `getMainPageBlocks`                            |
+| `luksoNetwork` | 7        | NFTs                | `getNFTsByAddress`, `getNFTCollectionsByAddress`, `getNFTById`, ...       |
+| `luksoNetwork` | 2        | Search              | `search`, `searchRedirect`                                                |
+| `luksoNetwork` | 4        | Smart Contracts     | `listcontracts`, `getabi`, `getsourcecode`, `getcontractmetadata`         |
+| `luksoNetwork` | 3        | Analytics           | `getStats`, `getTransactionChart`, `getMarketChart`                       |
+| `luksoNetwork` | 5        | Tokens              | `listTokens`, `getTokenByAddress`, `getTokenTransfers`, ...               |
+| `luksoNetwork` | 7        | Transactions        | `getTransactions`, `getTransactionByHash`, `getTokenTransfersByHash`, ... |
+| `profilejump`  | 5        | Aggregated Profiles | `prices`, `hotProfiles`, `tokensList`, `profilesList`, `tokenDetails`     |
 
-> 🔧 Note: This list is continuously growing. New contributions are always welcome!
+> 🔍 *This list is continually evolving. Contributions are encouraged to extend this overview with new projects and categories.*
 
 ---
 
