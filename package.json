@@ -4,6 +4,7 @@
   "description": "",
   "main": "./GridServer/index.js",
   "directories": {
+    "start": "node GridServer/index.js",
     "test": "tests"
   },
   "scripts": {
