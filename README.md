@@ -42,22 +42,22 @@ To use this repository with Claude, follow these steps:
 
 1. **Clone the repository:**
 
-   ```bash
+```bash
    git clone https://github.com/YOUR_USERNAME/lukso-mcp-schemas.git
    cd lukso-mcp-schemas
 ````
 
 2. **Install dependencies (if required by your schema files):**
 
-   ```bash
+```bash
    npm install
-   ```
+```
 
 3. **Connect to Claude with the following configuration:**
 
    In your Claude config file (e.g. `claude.config.json`):
 
-   ```json
+```json
    {
      "globalShortcut": "",
      "mcpServers": {
@@ -74,7 +74,7 @@ To use this repository with Claude, follow these steps:
        }
      }
    }
-   ```
+```
 
 4. **Run Claude with this configuration to start interacting with the schemas.**
 
