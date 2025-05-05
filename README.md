@@ -17,6 +17,31 @@ Schemas in this repository allow API interaction through:
 - **REST APIs**
 - **Node.js modules**
 - **ethers.js** / **web3.js**
+- ...
+
+---
+
+## 📚 Available Routes
+
+Below is a list of currently available schemas and their exposed routes:
+
+| Namespace      | # Routes | Route Names (Excerpt)                                                     |
+| -------------- | -------- | ------------------------------------------------------------------------- |
+| `luksoNetwork` | 3        | `readProfileData`, `fetchProfileMetadata`, `getUniversalProfile`          |
+| `gridartist`   | 2        | `requestAuth`, `updateProfileScript`                                      |
+| `luksoNetwork` | 12       | `listAddresses`, `getAddress`, `getAddressCounters`, ...                  |
+| `luksoNetwork` | 4        | `getBlocks`, `getBlockById`, `getBlockTransactions`, `getFinalized`       |
+| `luksoNetwork` | 2        | `getLuksoExplorerSchema`, `fectchLuksoExplorer`                           |
+| `luksoNetwork` | 2        | `getMainPageTransactions`, `getMainPageBlocks`                            |
+| `luksoNetwork` | 7        | `getNFTsByAddress`, `getNFTCollectionsByAddress`, `getNFTById`, ...       |
+| `luksoNetwork` | 2        | `search`, `searchRedirect`                                                |
+| `luksoNetwork` | 4        | `listcontracts`, `getabi`, `getsourcecode`, `getcontractmetadata`         |
+| `luksoNetwork` | 3        | `getStats`, `getTransactionChart`, `getMarketChart`                       |
+| `luksoNetwork` | 5        | `listTokens`, `getTokenByAddress`, `getTokenTransfers`, ...               |
+| `luksoNetwork` | 7        | `getTransactions`, `getTransactionByHash`, `getTokenTransfersByHash`, ... |
+| `profilejump`  | 5        | `prices`, `hotProfiles`, `tokensList`, `profilesList`, `tokenDetails`     |
+
+> 🔧 Note: This list is continuously growing. New contributions are always welcome!
 
 ---
 

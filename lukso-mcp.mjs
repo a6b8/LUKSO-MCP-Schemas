@@ -20,7 +20,7 @@ Server
     .prepare({
         scriptRootFolder: path.dirname(fileURLToPath(import.meta.url)),
         schemasRootFolder: './schemas/v1.2.0/',
-        localEnvPath: './.empty.env'
+        localEnvPath: './.example.env'
     })
     .then(async (schemas) => {
         const server = new McpServer(config)
