@@ -16,6 +16,6 @@
     "@erc725/erc725.js": "^0.27.2",
     "@modelcontextprotocol/sdk": "^1.10.1",
     "ethers": "^6.13.7",
-    "flowmcp": "github:a6b8/flowmcp#d88eae565add9de5a71e92afa611b831fd57799e"
+    "flowmcp": "github:flowmcp/flowmcp#d88eae565add9de5a71e92afa611b831fd57799e"
   }
 }
